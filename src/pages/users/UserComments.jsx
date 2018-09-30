@@ -26,10 +26,8 @@ class UserComments extends Component{
 
   arr() {
     let postsId = this.getPosts(this.props.match.params.id);
-    console.log(postsId)
     for(let i in postsId) {
       let userComments = this.getComments(postsId[i].id);
-      console.log(userComments)
     }
   
   }

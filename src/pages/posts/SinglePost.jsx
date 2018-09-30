@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import { Card, CardTitle, CardText } from 'reactstrap';
-import { getPosts, getUsers, getComments } from '../api';
+import { getPostById, getUsers, getComments } from '../api';
 
 class SinglePost extends Component {
-
-  getPost(id) {
-    id = parseInt(id);
-    let posts = this.props.getAppState('posts');
-    let post = posts.filter(post => {
-      return post.id === id;
-    })
-    if (post.length) {
-      return post[0];
+  constructor() {
+    super()
+    this.state = {
+      post:[],
+      users:[],
+      comments:[]
     }
-    
   }
+
+  // async getPost(id) {
+  //   id = parseInt(id);
+  //   let post = await getPostById(id);
+  //   return post.data[id-1].body;
+  // }
   
   getUser(id) {
     id = parseInt(id);
-    let users = this.props.getAppState('users');
+    let users = this.state.users;
     let userSearch = users.filter(user => {
       return user.id === id;
     })
@@ -29,19 +31,33 @@ class SinglePost extends Component {
   
   getComments(id) {
     id = parseInt(id);
-    let comments = this.props.getAppState('comments');
+    let comments = this.state.comments;
     let commentSearch = comments.filter(comment => {
       return comment.postId === id;
     })
     return commentSearch;
   }
-
-  
+  async componentDidMount() {
+    let id = this.props.match.params.id;
+    let addPost = await getPostById(id);
+    let addUsers = await getUsers();
+    let addComments = await getComments();
+    this.setState({
+      post: addPost.data,
+      users:  addUsers.data,
+      comments: addComments.data
+    })
+  }
 
   render() {
-    let post = this.getPost(this.props.match.params.id);
-    post.user = this.getUser(post.userId);
-    post.comments = this.getComments(post.id);
+    let post = this.state.post;
+    let posUsertId = post.map((post) => post.userId);
+    let postId = post.map((post) => post.id);
+   // let users = this.state.users;
+    post.getUser = this.getUser(posUsertId);
+    post.comments = this.getComments(postId);
+    // let comments = this.state.comments;
+    
     
     return(
       <Card body >
@@ -52,7 +68,7 @@ class SinglePost extends Component {
           {post.body}
         </CardText>
         <CardText>
-          <b>Autor:</b> {post.user.name} 
+          {/* <b>Autor:</b> {post.user.name}  */}
         </CardText>
         <p className="text-primary"><b>Comments:</b></p>
           {post.comments.map((comment) => {

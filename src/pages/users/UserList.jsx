@@ -1,8 +1,16 @@
 import React from 'react';
 import User from './User';
+import {getUsers} from '../api';
+
+async function getApiUsers()
+{
+  let users = await getUsers();
+
+  return users;
+}
 
 const UserList = (props) => {
-  let users = props.getAppState('users');
+  let users = getApiUsers();
   return(
     users.map((user) => {
       return(

@@ -11,6 +11,7 @@ import UserAlbums from './pages/users/UserAlbums';
 import UserComments from './pages/users/UserComments';
 import UserPosts from './pages/users/UserPosts';
 import { getPosts, getUsers, getComments, getAlbums, getPhotos } from './pages/api';
+import Page  from './pagination/Pagination';
 
 class App extends Component {
   constructor(props) {
@@ -42,47 +43,47 @@ class App extends Component {
       return this.setState(partialState, callback)
     }
 
-    componentWillMount() {
-      localStorage.getItem('users', 'posts', 'comments', 'photos', 'albums') && this.setState({
-        users: JSON.parse(localStorage.getItem('users')),
-        posts: JSON.parse(localStorage.getItem('posts')),
-        comments: JSON.parse(localStorage.getItem('comments')),
-        photos: JSON.parse(localStorage.getItem('photos')),
-        albums: JSON.parse(localStorage.getItem('albums')),
-        isLoading: false
-      })
-    }
+  //   componentWillMount() {
+  //     localStorage.getItem('users', 'posts', 'comments', 'photos', 'albums') && this.setState({
+  //       users: JSON.parse(localStorage.getItem('users')),
+  //       posts: JSON.parse(localStorage.getItem('posts')),
+  //       comments: JSON.parse(localStorage.getItem('comments')),
+  //       photos: JSON.parse(localStorage.getItem('photos')),
+  //       albums: JSON.parse(localStorage.getItem('albums')),
+  //       isLoading: false
+  //     })
+  //   }
 
 
-  async componentDidMount() {
-    if(!localStorage.getItem('users', 'posts', 'comments', 'photos', 'albums')) {
-      try {
-        let addUsers = await getUsers();
-        let addComments = await getComments();
-        let addPosts = await getPosts();
-        let addAlbums = await getAlbums();
-        let addPhotos = await getPhotos();
-        this.setState({
-          users: addUsers.data,
-          posts: addPosts.data,
-          comments: addComments.data,
-          photos: addPhotos.data,
-          albums: addAlbums.data
-        });
-        localStorage.setItem('users', JSON.stringify(this.state.users));
-        localStorage.setItem('posts', JSON.stringify(this.state.posts));
-        localStorage.setItem('comments', JSON.stringify(this.state.comments));
-        localStorage.setItem('photos', JSON.stringify(this.state.photos));
-        localStorage.setItem('albums', JSON.stringify(this.state.albums));
-        localStorage.setItem('callDate', Date.now());
-      } catch(e) {
-        this.setState({error: "API is down!!!"});
-      };
-    } else {
-      console.log('Using data from localStorage!')
-    }
+  // async componentDidMount() {
+  //   if(!localStorage.getItem('users', 'posts', 'comments', 'photos', 'albums')) {
+  //     try {
+  //       let addUsers = await getUsers();
+  //       let addComments = await getComments();
+  //       let addPosts = await getPosts();
+  //       let addAlbums = await getAlbums();
+  //       let addPhotos = await getPhotos();
+  //       this.setState({
+  //         users: addUsers.data,
+  //         posts: addPosts.data,
+  //         comments: addComments.data,
+  //         photos: addPhotos.data,
+  //         albums: addAlbums.data
+  //       });
+  //       localStorage.setItem('users', JSON.stringify(this.state.users));
+  //       localStorage.setItem('posts', JSON.stringify(this.state.posts));
+  //       localStorage.setItem('comments', JSON.stringify(this.state.comments));
+  //       localStorage.setItem('photos', JSON.stringify(this.state.photos));
+  //       localStorage.setItem('albums', JSON.stringify(this.state.albums));
+  //       localStorage.setItem('callDate', Date.now());
+  //     } catch(e) {
+  //       this.setState({error: "API is down!!!"});
+  //     };
+  //   } else {
+  //     console.log('Using data from localStorage!')
+  //   }
       
-  }  
+  // }  
 
  
 
@@ -95,6 +96,7 @@ class App extends Component {
             <React.Fragment>
               <TopMenu />
               <PostList  {...this.props} getAppState={this.getAppState} setAppState={this.setAppState} />
+              <Page />
             </React.Fragment>
           </Route>
 
